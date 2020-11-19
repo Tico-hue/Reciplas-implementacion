@@ -20,13 +20,13 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Login',views.mostrarLogin, name = 'login'),
-    path('Inicio',views.mostrarInicio, name = 'inicio'),
+    path('',views.mostrarInicio, name = 'inicio'),
    
     
     # path('Crear/', views.Crear.as_view(), name="crear"),
 	# path('Modificar/<str:pk>', views.Modificar.as_view(), name="modificar"),
 	# path('Eliminar/<str:pk>', views.Eliminar.as_view(), name="eliminar"),
-    path('proveedores',views.mostrarProveedores, name = 'proveedores'),
+    path('proveedores',views.CtrlEditarProveedor.mostrarProveedores, name = 'proveedores'),
     # path('crear_prov/',views.crearProveedor, name = 'crearProveedor'),
     path('guardar/<str:id>',views.CtrlEditarProveedor.guardarForm, name = 'guardar'),
     path('proveedores/editar_prov/<str:id>',views.CtrlEditarProveedor.mostrarForm, name = 'editarProveedor'),

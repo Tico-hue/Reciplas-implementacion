@@ -11,14 +11,15 @@ def mostrarLogin(request):
 def mostrarInicio(request):
     return render(request,'inicio.html')
 
-def mostrarProveedores(request):
-    LTP = Proveedor.objects.all()
-    context = {
-		'proveedores': LTP
-	}
-    return render(request,'proveedores.html',context)
 
-class CtrlEditarProveedor(View):
+class CtrlEditarProveedor(View):  
+    @classmethod
+    def mostrarProveedores(cls,request):
+        LTP = Proveedor.objects.all()
+        context = {
+            'proveedores': LTP
+        }
+        return render(request,'proveedores.html',context)
 
     @classmethod
     def mostrarForm(cls,request, id):

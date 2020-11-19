@@ -301,7 +301,7 @@
                             <td>
                               <div class="text-center">
                                 <div class="btn-group-sm">
-                                  <button class="btn btn-warning btnEditar btnEditarProveedor" id="btnEditarProveedor" title="Editar" onclick="findMyForm({{p.id}})" ><i class="fas fa-edit"></i></a></button>
+                                  <button class="btn btn-warning btnEditar btnEditarProveedor" id="btnEditarProveedor" title="Editar" onclick="UIEditarProveedor.mostrarForm({{p.id}})" ><i class="fas fa-edit"></i></a></button>
                                   <button class="btn btn-danger btnEliminar btnEliminarProveedor" id="btnEliminarProveedor" title="Eliminar"><i class="fas fa-trash"></i></button>
                                 </div>
                               </div>
@@ -350,7 +350,7 @@
                   </div>
                   <div class="modal-footer">
                     
-                    <button type="submit" name="Submit" id="btnGuardar" class="btn btn-success btnGuardarProveedo" onclick="guardarForm()" data-dismiss="modal">
+                    <button type="submit" name="Submit" id="btnGuardar" class="btn btn-success btnGuardarProveedor" onclick="UIEditarProveedor.guardarForm()" data-dismiss="modal">
                     Guardar
                     </button>
                     
@@ -364,23 +364,23 @@
           <!--Fin Modal Nuevo-->
       
           <!--Modal Eliminar-->
-          <div class="modal fade" id="modalEliminarProveedor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="modalProveedorEditado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="eliminarModalLabel">Eliminar Proveedor</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>  
                 <div class="modal-body text-center">
                   <br>
-                  <h5>¿Desea eliminar el proveedor seleccionado?</h5>
+                  <h5>El proveedor ha sido editado exitosamente!</h5>
                   <br>
                   
                 </div>
                 <div class="modal-footer">
-                  <button type="submit" id="btnGuardar" class="btn btn-success btnConfirmarEliminarProveedor" data-dismis="modal">Aceptar</button>
+                  <button type="submit" id="btnGuardar" class="btn btn-success " onclick="location.reload()" data-dismis="modal">Aceptar</button>
                 </div>
               </div>
             </div>
@@ -425,52 +425,51 @@
     <script type="text/javascript" src="{% static 'custom.js' %}"></script>
     <script>
    
-    var IDProv=0;
-      function findMyForm(id){
-        IDProv = id;
-        $('#modalProveedor').modal('show');
-        $.ajax({
-            type : 'GET',
-            url : 'proveedores/editar_prov/' + id ,
-            success : function(res){
-  
-                 let listafields =  ['nombre','apellido','CUIT','razon_social','direccion','localidad','provincia','telefono','mail'];
-                  for (var i = 0; i < 9; i++){
-                    b =listafields[i][0].toUpperCase() +  listafields[i].slice(1);
-                    if (b == 'Razon_social'){
-                      b= 'Razon social'
-                    } 
-                    a = `<label style="font-weight: 500;">${b}</label><input type="text" name="${listafields[i] }"`
-                    res = res.replaceAll(`<input type="text" name="${listafields[i]}"`, a); 
-                  }
-                  res = res.replace(/<label style="font-weight: 500;">Nombre/,'<div class="col-lg-6"><label style="font-weight: 500;">Nombre');
-                  res = res.replace(/id="id_direccion">/,'id="id_direccion"></div>');
-                  res = res.replace(/<label style="font-weight: 500;">Localidad/,'<div class="col-lg-6"><label style="font-weight: 500;">Localidad');
-                  res = res.replace(/id="id_mail">/,'id="id_mail"></div>');
-                  $('#showForm').html(res)    
-            }
-        
-        })
+   
+      class UIEditarProveedor {
+        static IDProv=0;
+
+          static mostrarForm(id){
+            UIEditarProveedor.IDProv = id;
+            $('#modalProveedor').modal('show');
+            $.ajax({
+                type : 'GET',
+                url : 'proveedores/editar_prov/' + id ,
+                success : function(res){
+      
+                    let listafields =  ['nombre','apellido','CUIT','razon_social','direccion','localidad','provincia','telefono','mail'];
+                      for (var i = 0; i < 9; i++){
+                       var b =listafields[i][0].toUpperCase() +  listafields[i].slice(1);
+                        if (b == 'Razon_social'){
+                          b= 'Razon social'
+                        } 
+                        var a = `<label style="font-weight: 500;">${b}</label><input type="text" name="${listafields[i] }"`
+                        res = res.replaceAll(`<input type="text" name="${listafields[i]}"`, a); 
+                      }
+                      res = res.replace(/<label style="font-weight: 500;">Nombre/,'<div class="col-lg-6"><label style="font-weight: 500;">Nombre');
+                      res = res.replace(/id="id_direccion">/,'id="id_direccion"></div>');
+                      res = res.replace(/<label style="font-weight: 500;">Localidad/,'<div class="col-lg-6"><label style="font-weight: 500;">Localidad');
+                      res = res.replace(/id="id_mail">/,'id="id_mail"></div>');
+                      $('#showForm').html(res)    
+                }
+            
+            })
+          }
+          
+          static guardarForm(){
+            var addNewProductForm = $("#formProveedor");
+            $.ajax({
+              type: 'POST',
+              url: 'guardar/'+ UIEditarProveedor.IDProv ,
+              data: addNewProductForm.serialize(),
+              success: function(res){
+                $("#modalProveedorEditado").modal("show");    
+              }
+            })   
+          } 
+            
       }
       
-        function guardarForm(){
-          var addNewProductForm = $("#formProveedor");
-          $.ajax({
-            type: 'POST',
-            url: 'guardar/'+ IDProv ,
-            data: addNewProductForm.serialize(),
-            success: function(res){
-              location.reload()
-              mostrarMensajeProveedorModificado()    
-              
-            }
-          })   
-        } 
-        function mostrarMensajeProveedorModificado(){
-          $('#editado').removeClass("invisible");
-          $("#editado").removeClass("collapse");
-        }
-        // async function mostrarMensaje()
        
 
       </script>
