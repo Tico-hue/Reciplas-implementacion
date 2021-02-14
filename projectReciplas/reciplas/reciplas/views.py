@@ -37,3 +37,4 @@ class CtrlEditarProveedor(View):
             if form.is_valid():
                 form.save(commit=True)
         return HttpResponseRedirect('/proveedores')
+
