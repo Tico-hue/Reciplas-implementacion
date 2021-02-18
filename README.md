@@ -1,6 +1,6 @@
 # Reciplas-implementacion
 
-This is an implementation of 'Update suppliers' use case. 
+This is an implementation of 'Update suppliers' use case from 'Tico-hue/reciplas' repository as a sales user functionlanity.
 
 ## Use Case
 
